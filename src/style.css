@@ -1,0 +1,11 @@
+* {
+    outline: 1px dotted red;
+}
+
+body {
+    margin: 0px;
+}
+
+.main-body {
+    background-color: blue;
+}
