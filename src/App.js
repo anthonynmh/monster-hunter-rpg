@@ -55,12 +55,14 @@ const locations = [
     }
 ];
 
+const inventory = ["Fists"];
+
 export default function App() {
     return (
         <div className="app">
             <LocationHeader location = {locations[0].name} />
             <MainUI />
-            <Inventory />
+            <Inventory weapon = {inventory[0]} />
         </div>
     );
 }

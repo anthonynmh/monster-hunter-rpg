@@ -4,12 +4,12 @@ export default function stats({playerStats}) {
     return (
         <div>
             <ul className="player-stats">
-                <li>HP: {playerStats.hp}</li>
-                <li>XP: {playerStats.xp}</li>
-                <li>Level: {playerStats.level}</li>
-                <li>Gold: {playerStats.gold}</li>
-                <li>Attack Damage: {playerStats.attackDamage}</li>
-                <li>Armour Power: {playerStats.armourPower}</li>
+                <li>HP: <strong>{playerStats.hp}</strong></li>
+                <li>XP: <strong>{playerStats.xp}</strong></li>
+                <li>Level: <strong>{playerStats.level}</strong></li>
+                <li>Gold: <strong>{playerStats.gold}</strong></li>
+                <li>Attack Damage: <strong>{playerStats.attackDamage}</strong></li>
+                <li>Armour Power: <strong>{playerStats.armourPower}</strong></li>
             </ul>
         </div>
     );
