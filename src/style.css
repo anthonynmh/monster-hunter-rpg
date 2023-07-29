@@ -11,37 +11,55 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin: 0px 200px 0px 200px;
+}
+
+.non-action-container {
     border:  5px solid brown;
+    margin: 0px 200px 0px 200px;
+    min-width: 400px;
 }
 
 .location-text {
     border: 2px solid black;
+    padding: 10px;
 }
 
-.main-ui {
-    
-}
-
-.player-stats {
+.stats {
     list-style-type: none;
     border: 2px solid black;
+    padding: 10px;
 }
 
 ul {
     padding: 0px;
 }
 
-.main-ui-text {
+.context {
     margin: 0px;
     border: 2px solid black;
+    padding: 10px;
 }
 
 .inventory {
     border: 2px solid black;
     margin-top: 15px;
+    padding: 10px;
+}
+
+button {
+    border-radius: 15px;
+    margin-left: 5px;
 }
 
 .weapon-buttons {
     float: right;
+}
+
+.action-container {
+    margin: 10px auto 0px auto;
+}
+
+.action-buttons {
+    width: 200px;
+    margin-left: 10px;
 }
