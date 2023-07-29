@@ -16,7 +16,7 @@ body {
 .non-action-container {
     border:  5px solid brown;
     margin: 0px 200px 0px 200px;
-    min-width: 400px;
+    /* min-width: 400px; */
 }
 
 .location-text {
