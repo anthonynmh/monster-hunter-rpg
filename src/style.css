@@ -17,26 +17,38 @@ body {
     border:  5px solid brown;
     width: 450px;
     margin: auto;
-    /* margin: 0px 200px 0px 200px; */
-    /* min-width: 400px; */
 }
 
 .location-text {
     border: 2px solid black;
     padding: 10px;
+    background-color: white;
 }
 
 .stats {
-    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.playerStats {
     border: 2px solid black;
     padding: 10px;
+    background-color: white;
+}
+
+.monsterStats {
+    border: 2px solid black;
+    padding: 10px;
+    background-color: lightpink;
 }
 
 ul {
+    list-style-type: none;
     padding: 0px;
 }
 
 .context {
+    background-color: white;
     margin: 0px;
     border: 2px solid black;
     padding: 10px;
@@ -46,6 +58,7 @@ ul {
     border: 2px solid black;
     margin-top: 15px;
     padding: 10px;
+    background-color: white;
 }
 
 button {

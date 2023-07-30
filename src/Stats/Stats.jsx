@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Stats(props) {
     return (
-        <ul className="stats">
+        <ul className="playerStats">
             <li>HP: <strong>{props.hp}</strong></li>
             <li>XP: <strong>{props.xp}</strong></li>
             <li>Level: <strong>{props.level}</strong></li>

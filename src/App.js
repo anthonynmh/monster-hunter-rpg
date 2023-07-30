@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import LocationHeader from './Location Header/LocationHeader';
 import Stats from './Stats/Stats';
+import MonsterStats from './Stats/MonsterStats';
 import Context from './Context/Context';
 import Inventory from './Inventory/Inventory';
 import Actions from './Actions/Actions';
@@ -44,8 +45,27 @@ const weapons = [
     }
 ];
 
-const inventory = ["Fists"];
+const monsters = [
+    {
+        name: "Slimey",
+        hp: 20,
+        attackDamage: 5
+    },
+    {
+        name: "Hairy Beast",
+        hp: 50,
+        attackDamage: 10
+    }
+];
+
+let inventory = ["Fists"];
 let weaponToBuy = 1;
+let chosenMonster = monsters[Math.round(Math.random())];
+let playerHp = playerStats.hp;
+let playerDamage = playerStats.attackDamage;
+let monsterHp;
+let monsterDamage;
+let isFighting = false;
 
 // App function
 export default function App() {
@@ -181,6 +201,59 @@ export default function App() {
                 }
             ],
             text: "You are at the nicest pier you have ever seen. [This area is still in development]."
+        },
+        {
+            name: "Slimey",
+            "button infos": [
+                {
+                    text: "Attack",
+                    action: attack
+                },
+                {
+                    text: "Return to entrance",
+                    action: goToMonsterMines
+                }
+            ],
+            text: "Fighting: Slimey"
+        },
+        {
+            name: "Hairy Beast",
+            "button infos": [
+                {
+                    text: "Attack",
+                    action: attack
+                },{
+                    text: "Return to entrance",
+                    action: goToMonsterMines
+                }
+            ],
+            text: "Fighting: Hairy Beast"
+        },
+        {
+            name: "Dragon",
+            "button infos": [
+                {
+                    text: "Attack",
+                    action: attack
+                },{
+                    text: "Return to entrance",
+                    action: goToDragonDen
+                }
+            ],
+            text: "Fighting: Dragon"
+        },
+        {
+            name: "fainted",
+            "button infos": [
+                {
+                    text: "Continue your journey (5 gold)",
+                    action: goToInfirmary
+                },
+                {
+                    text: "Restart",
+                    action: restart
+                }
+            ]
         }
     ];
 
@@ -213,11 +286,13 @@ export default function App() {
     function goToMonsterMines() {
         setCurrLocation(5);
         setCurrText(locations[5].text);
+        isFighting = false;
     }
 
     function goToDragonDen() {
         setCurrLocation(6);
         setCurrText(locations[6].text);
+        isFighting = false;
     }
 
     function goToPier() {
@@ -225,19 +300,38 @@ export default function App() {
         setCurrText(locations[7].text);
     }
 
+    function goToCombat(monsterName) {
+        if (monsterName === "Slimey") {
+            setCurrLocation(8);
+            setCurrText(locations[8].text);
+        } else if (monsterName === "Hairy Beast") {
+            setCurrLocation(9);
+            setCurrText(locations[9].text);
+        } else {
+            setCurrLocation(10);
+            setCurrText(locations[10].text);
+        }
+        setCurrText("Fighting: " + monsterName);
+        isFighting = true;
+    }
+
     // inventory functions
     function nextWeapon() {
         if (currWeapon === inventory.length - 1) {
+            playerDamage = weapons[0].power;
             setCurrWeapon(0);
         } else {
+            playerDamage = weapons[currWeapon + 1].power;
             setCurrWeapon(currWeapon + 1);
         }
     }
 
     function prevWeapon() {
         if (currWeapon === 0) {
+            playerDamage = weapons[inventory.length - 1].power;
             setCurrWeapon(inventory.length - 1);
         } else {
+            playerDamage = weapons[currWeapon - 1].power;
             setCurrWeapon(currWeapon - 1);
         }
     }
@@ -278,8 +372,8 @@ export default function App() {
     }
     
     function buyHp() {
-        if (playerStats.gold > 20) {
-            playerStats.hp += 50;
+        if (playerStats.gold >= 20) {
+            setCurrHp(currHp + 50);
             playerStats.gold -= 20;
             setCurrText("You spent 20 Gold. You feel rejuvenated.");
         } else {
@@ -289,14 +383,43 @@ export default function App() {
 
     // combat functions
     function fightMonsters() {
-
+        chosenMonster = monsters[Math.round(Math.random())];
+        monsterHp = chosenMonster.hp;
+        monsterDamage = chosenMonster.attackDamage;
+        goToCombat(chosenMonster.name);
     }
 
     function fightDragon() {
-        
+        monsterHp = 500;
+        monsterDamage = 150;
+        goToCombat("Dragon", 100);
     }
 
+    function attack() {
+        if (currHp > 0 && monsterHp > 0) {
+            // player's turn
+            monsterHp -= playerDamage;
+            if (monsterHp <= 0) {
+                playerStats.gold += 40;
+                setCurrText("You win. You collected 40 Gold. Please exit to entrance.");
+            }
 
+            setCurrHp(currHp - monsterDamage);
+            if (currHp <= 0) {
+                setCurrText("You fainted.");
+                setCurrLocation(11);
+            }
+        }
+    }
+
+    function restart() {
+        setCurrHp(playerStats.hp);
+        playerStats.gold = 50;
+        inventory = ["Fists"];
+        goToIntersection();
+    }
+
+    const [currHp, setCurrHp] = useState(playerStats.hp);
     const [currLocation, setCurrLocation] = useState(0);
     const [currWeapon, setCurrWeapon] = useState(0);
     const [currText, setCurrText] = useState(locations[0].text);
@@ -307,14 +430,28 @@ export default function App() {
                 <LocationHeader 
                     location = {locations[currLocation].name} 
                 />
-                <Stats 
-                    hp={playerStats.hp}
-                    xp={playerStats.xp}
-                    level={playerStats.level}
-                    gold={playerStats.gold}
-                    attackDamage={playerStats.armourPower}
-                    armourPower={playerStats.armourPower}
-                />
+
+                <div className="stats">
+                    <Stats 
+                        hp={currHp}
+                        xp={playerStats.xp}
+                        level={playerStats.level}
+                        gold={playerStats.gold}
+                        attackDamage={playerStats.armourPower}
+                        armourPower={playerStats.armourPower}
+                    />
+
+                    {isFighting ? (
+                        <MonsterStats
+                            hp={monsterHp}
+                            attackDamage={monsterDamage}
+                        />
+                    ) : (
+                        <div></div>
+                    )}
+                    
+                </div>
+                
                 <Context 
                     text={currText} 
                 />
