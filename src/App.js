@@ -61,7 +61,7 @@ const monsters = [
 let inventory = ["Fists"];
 let weaponToBuy = 1;
 let chosenMonster = monsters[Math.round(Math.random())];
-let playerHp = playerStats.hp;
+// let playerHp = playerStats.hp;
 let playerDamage = playerStats.attackDamage;
 let monsterHp;
 let monsterDamage;
