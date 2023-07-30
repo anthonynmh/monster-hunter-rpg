@@ -7,42 +7,48 @@ import Context from './Context/Context';
 import Inventory from './Inventory/Inventory';
 import Actions from './Actions/Actions';
 
+const playerStats = {
+    hp: 100,
+    xp: 0,
+    level: 0,
+    gold: 10,
+    attackDamage: 5,
+    armourPower: 1
+};
+
+const weapons = [
+    {
+        name: "Fists",
+        power: 5,
+        text: "Equipped your 'ol Fists."
+    },
+    {
+        name: "Stick",
+        power: 10,
+        text: "Equipped a trusty Stick."
+    },
+    {
+        name: "Dagger",
+        power: 30,
+        text: "Equipped a lil cute Dagger."
+    },
+    {
+        name: "Rusty Sword",
+        power: 50,
+        text: "Equipped Rusty Sword. Hope it doesn't break ;)"
+    },
+    {
+        name: "Hunter's Sword",
+        power: 100,
+        text: "Equipped the Hunter's Sword. Perfect for a Dragon Slayer like yourself."
+    }
+];
+
 const inventory = ["Fists"];
-
-// action functions
-function buyWeapon() {
-
-}
-
-function sellWeapon() {
-
-}
-
-function buyArmour() {
-
-}
-
-function sellArmour() {
-
-}
-
-function buyHp() {
-
-}
-
-// combat functions
-function fightMonsters() {
-
-}
-
-function fightDragon() {
-    
-}
+let weaponToBuy = 1;
 
 // App function
 export default function App() {
-    const [currLocation, setCurrLocation] = useState(0);
-
     const locations = [
         {
             name: "Intersection",
@@ -96,7 +102,7 @@ export default function App() {
                     action: buyWeapon
                 },
                 {
-                    text: "Sell weapon",
+                    text: "Sell last bought weapon",
                     action: sellWeapon
                 },
                 {
@@ -181,48 +187,150 @@ export default function App() {
     // goto functions
     function goToIntersection() {
         setCurrLocation(0);
+        setCurrText(locations[0].text);
     }
 
     function goToTownSquare() {
         setCurrLocation(1);
+        setCurrText(locations[1].text);
     }
 
     function goToWeaponStore() {
         setCurrLocation(2);
+        setCurrText(locations[2].text);
     }
 
     function goToArmourStore() {
         setCurrLocation(3);
+        setCurrText(locations[3].text);
     }
 
     function goToInfirmary() {
         setCurrLocation(4);
+        setCurrText(locations[4].text);
     }
 
     function goToMonsterMines() {
         setCurrLocation(5);
+        setCurrText(locations[5].text);
     }
 
     function goToDragonDen() {
         setCurrLocation(6);
+        setCurrText(locations[6].text);
     }
 
     function goToPier() {
         setCurrLocation(7);
+        setCurrText(locations[7].text);
     }
+
+    // inventory functions
+    function nextWeapon() {
+        if (currWeapon === inventory.length - 1) {
+            setCurrWeapon(0);
+        } else {
+            setCurrWeapon(currWeapon + 1);
+        }
+    }
+
+    function prevWeapon() {
+        if (currWeapon === 0) {
+            setCurrWeapon(inventory.length - 1);
+        } else {
+            setCurrWeapon(currWeapon - 1);
+        }
+    }
+
+    // transaction functions
+    function buyWeapon() {
+        if (playerStats.gold > 30 && weaponToBuy < weapons.length) {
+            playerStats.gold -= 30;
+            inventory.push(weapons[weaponToBuy].name);
+            setCurrText("You now own: " + weapons[weaponToBuy].name + ". ");
+            weaponToBuy++;
+        } else {
+            if (weaponToBuy === weapons.length) {
+                setCurrText("You have already purchased the best weapon. We have no more weapons at the store.");
+            } else {
+                setCurrText("You are broke. Please leave the store.");
+            }
+        }
+    }
+
+    function sellWeapon() {
+        if (weaponToBuy > 1) {
+            let popped = inventory.pop();
+            playerStats.gold += 30;
+            setCurrText("You sold: " + popped + ". ")
+            weaponToBuy--;
+        } else {
+            setCurrText("You have nothing to sell.");
+        }
+    }
+    
+    function buyArmour() {
+        setCurrText("Still in development.");
+    }
+    
+    function sellArmour() {
+        setCurrText("Still in development.");
+    }
+    
+    function buyHp() {
+        if (playerStats.gold > 20) {
+            playerStats.hp += 50;
+            playerStats.gold -= 20;
+            setCurrText("You spent 20 Gold. You feel rejuvenated.");
+        } else {
+            setCurrText("You are too broke for healthcare.");
+        }
+    }
+
+    // combat functions
+    function fightMonsters() {
+
+    }
+
+    function fightDragon() {
+        
+    }
+
+
+    const [currLocation, setCurrLocation] = useState(0);
+    const [currWeapon, setCurrWeapon] = useState(0);
+    const [currText, setCurrText] = useState(locations[0].text);
 
     return (
         <div className="app">
             <div className="non-action-container">
-                <LocationHeader location = {locations[currLocation].name} />
-                <Stats />
-                <Context text={locations[currLocation].text} />
-                <Inventory weapon = {inventory[currLocation]} />
+                <LocationHeader 
+                    location = {locations[currLocation].name} 
+                />
+                <Stats 
+                    hp={playerStats.hp}
+                    xp={playerStats.xp}
+                    level={playerStats.level}
+                    gold={playerStats.gold}
+                    attackDamage={playerStats.armourPower}
+                    armourPower={playerStats.armourPower}
+                />
+                <Context 
+                    text={currText} 
+                />
+                <Inventory 
+                    weapon={inventory[currWeapon]} 
+                    actionNext={nextWeapon}
+                    actionPrev={prevWeapon}
+                />
             </div>
             <div className="action-container">
                 {
                     locations[currLocation]["button infos"].map((infoPair) => (
-                        <Actions action={infoPair.action} text={infoPair.text} />
+                        <Actions 
+                            action={infoPair.action} 
+                            text={infoPair.text} 
+                        />
                     ))
                 }
             </div>            

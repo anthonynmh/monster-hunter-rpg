@@ -1,21 +1,13 @@
 import React from "react";
 
-export default function Inventory({weapon}) {
+export default function Inventory(props) {
     return (
         <div className="inventory">
-            <span>Currently equipped: <strong>{weapon}</strong></span>
+            <span>Currently equipped: <strong>{props.weapon}</strong></span>
             <span className="weapon-buttons">
-                <button onClick={prevWeapon}>Previous weapon</button>
-                <button onClick={nextWeapon}>Next weapon</button>
+                <button onClick={props.actionPrev}>Previous weapon</button>
+                <button onClick={props.actionNext}>Next weapon</button>
             </span>
         </div>
     );
-}
-
-function prevWeapon() {
-    // alert("clicked prev weapon button!");
-}
-
-function nextWeapon() {
-    // alert("clicked next weapon button!");
 }
