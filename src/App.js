@@ -55,13 +55,18 @@ const monsters = [
         name: "Hairy Beast",
         hp: 50,
         attackDamage: 10
+    },
+    {
+        name: "Dragon",
+        hp: 50,
+        attackDamage: 50
     }
 ];
 
 let inventory = ["Fists"];
 let weaponToBuy = 1;
 let chosenMonster = monsters[Math.round(Math.random())];
-// let playerHp = playerStats.hp;
+let playerHp = 100;
 let playerDamage = playerStats.attackDamage;
 let monsterHp;
 let monsterDamage;
@@ -162,7 +167,7 @@ export default function App() {
                     action: goToTownSquare
                 }
             ],
-            text: "You entered the Infirmary. [This area is still in development]."
+            text: "You entered the Infirmary."
         },
         {
             name: "Monster Mines",
@@ -176,7 +181,7 @@ export default function App() {
                     action: goToIntersection
                 }
             ],
-            text: "You stand in front of Monster Mines. Monsters begin to swarm you. [This area is still in development]."
+            text: "You stand in front of Monster Mines. Monsters begin to swarm you."
         },
         {
             name: "Dragon's Den",
@@ -190,7 +195,7 @@ export default function App() {
                     action: goToIntersection
                 }
             ],
-            text: "You stand in front of the Dragon's Den. You feel bad aura from the inside. [This area is still in development]."
+            text: "You stand in front of the Dragon's Den. You feel bad aura from the inside."
         },
         {
             name: "Pier",
@@ -203,7 +208,7 @@ export default function App() {
             text: "You are at the nicest pier you have ever seen. [This area is still in development]."
         },
         {
-            name: "Slimey",
+            name: "Fighting Slimey",
             "button infos": [
                 {
                     text: "Attack",
@@ -217,7 +222,7 @@ export default function App() {
             text: "Fighting: Slimey"
         },
         {
-            name: "Hairy Beast",
+            name: "Fighting Hairy Beast",
             "button infos": [
                 {
                     text: "Attack",
@@ -230,7 +235,7 @@ export default function App() {
             text: "Fighting: Hairy Beast"
         },
         {
-            name: "Dragon",
+            name: "Fighting Dragon",
             "button infos": [
                 {
                     text: "Attack",
@@ -243,17 +248,64 @@ export default function App() {
             text: "Fighting: Dragon"
         },
         {
+            name: "Defeated monster",
+            "button infos": [
+                {
+                    text: "Return to entrance",
+                    action: goToMonsterMines
+                }
+            ],
+            text: "You defeated the monster! You collected 40 Gold."
+        },
+        {
             name: "fainted",
             "button infos": [
                 {
-                    text: "Continue your journey (5 gold)",
+                    text: "Go to Infirmary (20 gold)",
                     action: goToInfirmary
                 },
                 {
                     text: "Restart",
                     action: restart
                 }
-            ]
+            ],
+            text: "You fainted during the fight."
+        }, 
+        {
+            name: "winning page",
+            "button infos": [
+                {
+                    text: "Restart",
+                    action: restart
+                }
+            ],
+            text: "Congratulations! You have slayed the Dragon."
+        },
+        {
+            name: "Introduction",
+            "button infos": [
+                {
+                    text: "Go to Town Square",
+                    action: goToTownSquare
+                },
+                {
+                    text: "Go to Monster Mines",
+                    action: goToMonsterMines
+                },
+                {
+                    text: "Go to Dragon's Den",
+                    action: goToDragonDen
+                },
+                {
+                    text: "Go to Pier",
+                    action: goToPier
+                }
+            ],
+            text: "Welcome to RhyneSvill. " +
+                    "You must defeat the dragon that is preventing people from leaving the town. " +
+                    "You are in the town's intersection. " +
+                    "Where do you want to go? " +
+                    "Use the buttons below."
         }
     ];
 
@@ -298,6 +350,21 @@ export default function App() {
     function goToPier() {
         setCurrLocation(7);
         setCurrText(locations[7].text);
+    }
+
+    function goToMonsterWin() {
+        setCurrLocation(11);
+        setCurrText(locations[11].text);
+    }
+
+    function goToFaint() {
+        setCurrLocation(12);
+        setCurrText(locations[12].text);
+    }
+
+    function goToDragonWin() {
+        setCurrLocation(13);
+        setCurrText(locations[13].text);
     }
 
     function goToCombat(monsterName) {
@@ -390,29 +457,46 @@ export default function App() {
     }
 
     function fightDragon() {
-        monsterHp = 500;
-        monsterDamage = 150;
-        goToCombat("Dragon", 100);
+        chosenMonster = monsters[2];
+        monsterHp = chosenMonster.hp;
+        monsterDamage = chosenMonster.attackDamage;
+        goToCombat(chosenMonster.name);
+    }
+
+    function randomIntFromInterval(min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min)
     }
 
     function attack() {
         if (currHp > 0 && monsterHp > 0) {
             // player's turn
-            monsterHp -= playerDamage;
+            let playerDamageAmount = randomIntFromInterval(1, playerDamage);
+            monsterHp -= playerDamageAmount;
+            
             if (monsterHp <= 0) {
-                playerStats.gold += 40;
-                setCurrText("You win. You collected 40 Gold. Please exit to entrance.");
-            }
+                if (currLocation === 10) {
+                    goToDragonWin();
+                } else {
+                    playerStats.gold += 40;
+                    goToMonsterWin();
+                }
+            } else {
 
-            setCurrHp(currHp - monsterDamage);
-            if (currHp <= 0) {
-                setCurrText("You fainted.");
-                setCurrLocation(11);
+                let monsterDamageAmount = randomIntFromInterval(1, monsterDamage);
+                playerHp -= monsterDamageAmount;
+                setCurrHp(playerHp);
+                if (playerHp <= 0) {
+                    goToFaint();
+                }
+
+                setCurrText("You dealt " + playerDamageAmount + " damage. " + 
+                        "Enemy dealt " + monsterDamageAmount + " damage to you.");
             }
         }
     }
 
     function restart() {
+        isFighting = false;
         setCurrHp(playerStats.hp);
         playerStats.gold = 50;
         inventory = ["Fists"];
@@ -420,9 +504,9 @@ export default function App() {
     }
 
     const [currHp, setCurrHp] = useState(playerStats.hp);
-    const [currLocation, setCurrLocation] = useState(0);
+    const [currLocation, setCurrLocation] = useState(14);
     const [currWeapon, setCurrWeapon] = useState(0);
-    const [currText, setCurrText] = useState(locations[0].text);
+    const [currText, setCurrText] = useState(locations[14].text);
 
     return (
         <div className="app">
@@ -437,7 +521,7 @@ export default function App() {
                         xp={playerStats.xp}
                         level={playerStats.level}
                         gold={playerStats.gold}
-                        attackDamage={playerStats.armourPower}
+                        attackDamage={playerDamage}
                         armourPower={playerStats.armourPower}
                     />
 

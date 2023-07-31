@@ -3,8 +3,9 @@
 }
 
 body {
-    margin: 0px;
-    background-color: burlywood;
+    margin: 20px;
+    /* background-color: burlywood; */
+    background-color: darkblue;
 }
 
 .app {
@@ -14,7 +15,8 @@ body {
 }
 
 .non-action-container {
-    border:  5px solid brown;
+    /* border:  5px solid brown; */
+    border: 5px solid grey;
     width: 450px;
     margin: auto;
 }
@@ -25,21 +27,28 @@ body {
     background-color: white;
 }
 
+.location-strong {
+    color: red;
+}
+
 .stats {
     display: flex;
     justify-content: space-between;
+    background-color: grey;
 }
 
 .playerStats {
     border: 2px solid black;
     padding: 10px;
-    background-color: white;
+    background-color: lightcyan;
+    width: 39%;
 }
 
 .monsterStats {
     border: 2px solid black;
     padding: 10px;
     background-color: lightpink;
+    width: 50%;
 }
 
 ul {
@@ -48,15 +57,14 @@ ul {
 }
 
 .context {
-    background-color: white;
     margin: 0px;
-    border: 2px solid black;
+    border: 1px solid black;
     padding: 10px;
+    background-color: white;
 }
 
 .inventory {
-    border: 2px solid black;
-    margin-top: 15px;
+    border: 1px solid black;
     padding: 10px;
     background-color: white;
 }
@@ -64,6 +72,8 @@ ul {
 button {
     border-radius: 15px;
     margin-left: 5px;
+    margin-top: -5px;
+    height: 25px;
 }
 
 .weapon-buttons {
@@ -71,7 +81,7 @@ button {
 }
 
 .action-container {
-    margin: 10px auto 0px auto;
+    margin: 20px auto 0px auto;
 }
 
 .action-buttons {

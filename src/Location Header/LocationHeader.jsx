@@ -4,7 +4,7 @@ export default function LocationHeader({location}) {
     return (
         <div className="location-header">
             <div className="location-text">
-                Location = <strong>{location}</strong>
+                Location = <strong className="location-strong">{location}</strong>
             </div>
         </div>
     );
