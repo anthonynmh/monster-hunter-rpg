@@ -21,10 +21,16 @@ body {
     margin: auto;
 }
 
-.location-text {
+.location-header {
+    display: flex;
     border: 2px solid black;
     padding: 10px;
     background-color: white;
+    justify-content: space-between;
+}
+
+.location-text {
+    
 }
 
 .location-strong {

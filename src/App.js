@@ -503,6 +503,11 @@ export default function App() {
         goToIntersection();
     }
 
+    function showTips() {
+        setCurrText("Start by farming Gold at the Monster Mines. " +
+                "Tip: Buy the best weapon before you fight the Dragon. ");
+    }
+
     const [currHp, setCurrHp] = useState(playerStats.hp);
     const [currLocation, setCurrLocation] = useState(14);
     const [currWeapon, setCurrWeapon] = useState(0);
@@ -513,6 +518,7 @@ export default function App() {
             <div className="non-action-container">
                 <LocationHeader 
                     location = {locations[currLocation].name} 
+                    action = {showTips}
                 />
 
                 <div className="stats">
